@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Purchases – {{ email }}{% endblock %}
+
+{% block content %}
+<h1>Purchases for {{ email }}</h1>
+
+{% if purchases %}
+<table>
+    <thead>
+        <tr>
+            <th>Purchase #</th>
+            <th>Date</th>
+            <th>Net Price</th>
+            <th>Cash Paid</th>
+            <th>Balance</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in purchases %}
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ "%.2f"|format(p.rounded_net_price) }}</td>
+            <td>{{ "%.2f"|format(p.cash_paid) }}</td>
+            <td>{{ "%.2f"|format(p.balance) }}</td>
+            <td><a href="/history/purchases/{{ p.id }}">View Details</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No purchases found for this email address.</p>
+{% endif %}
+
+<a href="/history/" class="btn" style="margin-top:15px;display:inline-block;">Back</a>
+{% endblock %}

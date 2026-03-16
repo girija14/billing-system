@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Purchase #{{ purchase.id }}{% endblock %}
+
+{% block content %}
+<h1>Purchase #{{ purchase.id }}</h1>
+
+<p><strong>Customer Email:</strong> {{ purchase.customer_email }}</p>
+<p><strong>Date:</strong> {{ purchase.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+
+<h3>Items Purchased</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Purchase Price</th>
+            <th>Tax %</th>
+            <th>Tax Payable</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in purchase.items %}
+        <tr>
+            <td>{{ item.product_id }}</td>
+            <td>{{ item.product_name }}</td>
+            <td>{{ "%.2f"|format(item.unit_price) }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ "%.2f"|format(item.purchase_price) }}</td>
+            <td>{{ "%.2f"|format(item.tax_percentage) }}%</td>
+            <td>{{ "%.2f"|format(item.tax_amount) }}</td>
+            <td>{{ "%.2f"|format(item.total_price) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="summary">
+    <table class="summary-table">
+        <tr>
+            <td class="label">Total price without tax:</td>
+            <td class="value">{{ "%.2f"|format(purchase.total_without_tax) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Total tax payable:</td>
+            <td class="value">{{ "%.2f"|format(purchase.total_tax) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Net price:</td>
+            <td class="value">{{ "%.2f"|format(purchase.net_price) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Rounded down net price:</td>
+            <td class="value">{{ "%.2f"|format(purchase.rounded_net_price) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Cash paid:</td>
+            <td class="value">{{ "%.2f"|format(purchase.cash_paid) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Balance returned:</td>
+            <td class="value">{{ "%.2f"|format(purchase.balance) }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="actions" style="margin-top:15px;">
+    <a href="/history/purchases?email={{ purchase.customer_email }}" class="btn">Back to Purchases</a>
+    <a href="/billing/" class="btn">New Bill</a>
+</div>
+{% endblock %}

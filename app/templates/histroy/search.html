@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Purchase History{% endblock %}
+
+{% block content %}
+<h1>Purchase History</h1>
+
+<form method="get" action="/history/purchases">
+    <div class="form-group">
+        <label for="email">Customer Email:</label>
+        <input type="email" id="email" name="email"
+               placeholder="Enter customer email" required>
+    </div>
+    <button type="submit" class="btn">Search</button>
+</form>
+{% endblock %}
