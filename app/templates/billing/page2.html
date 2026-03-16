@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Bill Generated{% endblock %}
+
+{% block content %}
+<h1>Billing Page</h1>
+
+<!-- Customer Email -->
+<div class="section">
+    <p><strong>Customer Email:</strong> {{ result.customer_email }}</p>
+</div>
+
+<!-- Bill items table -->
+<div class="section">
+    <h3>Bill Section</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Purchase Price</th>
+                <th>Tax % for Item</th>
+                <th>Tax Payable for Item</th>
+                <th>Total Price of the Item</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in result.items %}
+            <tr>
+                <td>{{ item.product_id }}</td>
+                <td>{{ "%.2f"|format(item.unit_price) }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ "%.2f"|format(item.purchase_price) }}</td>
+                <td>{{ "%.2f"|format(item.tax_percentage) }}%</td>
+                <td>{{ "%.2f"|format(item.tax_amount) }}</td>
+                <td>{{ "%.2f"|format(item.total_price) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Totals summary -->
+<div class="summary">
+    <table class="summary-table">
+        <tr>
+            <td class="label">Total price without tax:</td>
+            <td class="value">{{ "%.2f"|format(result.total_without_tax) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Total tax payable:</td>
+            <td class="value">{{ "%.2f"|format(result.total_tax) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Net price of the purchased item:</td>
+            <td class="value">{{ "%.2f"|format(result.net_price) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Rounded down value of the purchased items net price:</td>
+            <td class="value">{{ "%.2f"|format(result.rounded_net_price) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Balance payable to the customer:</td>
+            <td class="value">{{ "%.2f"|format(result.balance) }}</td>
+        </tr>
+    </table>
+</div>
+
+<hr>
+
+<!-- Balance Denomination breakdown -->
+{% if result.balance_denominations %}
+<div class="section">
+    <h3>Balance Denomination:</h3>
+    <table class="denom-table">
+        {% for val, count in result.balance_denominations %}
+        <tr>
+            <td class="label">{{ val }}:</td>
+            <td class="value">{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+
+<div class="actions">
+    <a href="/billing/" class="btn">New Bill</a>
+    <a href="/history/" class="btn">View History</a>
+</div>
+
+<p class="info" style="margin-top:15px;">
+    Invoice has been sent to <strong>{{ result.customer_email }}</strong> in the background.
+</p>
+{% endblock %}
