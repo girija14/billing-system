@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<h1>Products</h1>
+
+<a href="/products/add" class="btn" style="margin-bottom:15px;display:inline-block;">Add New Product</a>
+
+{% if products %}
+<table>
+    <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Tax %</th>
+            <th>Available Stock</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in products %}
+        <tr>
+            <td>{{ p.product_id }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ "%.2f"|format(p.price) }}</td>
+            <td>{{ "%.2f"|format(p.tax_percentage) }}%</td>
+            <td>{{ p.available_stocks }}</td>
+            <td>
+                <a href="/products/edit/{{ p.id }}" class="btn btn-small">Edit</a>
+                <form method="post" action="/products/delete/{{ p.id }}" style="display:inline;">
+                    <button type="submit" class="btn btn-small btn-danger"
+                            onclick="return confirm('Delete this product?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No products found. <a href="/products/add">Add one</a>.</p>
+{% endif %}
+{% endblock %}
